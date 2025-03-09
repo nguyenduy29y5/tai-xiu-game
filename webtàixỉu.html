@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tài Xỉu Game</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #42A5F5, #1E88E5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+
+        /* Màn hình đăng nhập */
+        .login-container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 60px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            width: 400px;
+            transition: transform 0.3s ease;
+        }
+
+        .login-container h1 {
+            font-size: 48px;
+            color: #FF4081;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 18px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            border: none;
+            font-size: 18px;
+            background-color: #1E88E5;
+            color: white;
+            outline: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .login-container input:focus {
+            background-color: #42A5F5;
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 18px;
+            font-size: 20px;
+            background-color: #FF4081;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-container button:hover {
+            background-color: #F50057;
+        }
+
+        /* Game */
+        .container {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+            width: 500px;
+        }
+
+        h1 {
+            font-size: 48px;
+            color: #FF4081;
+            margin-bottom: 20px;
+        }
+
+        .bet-options {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .bet-btn {
+            background-color: #FF4081;
+            color: white;
+            padding: 20px 40px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 22px;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .bet-btn:hover {
+            background-color: #F50057;
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .bet-btn.active {
+            background-color: #FF80AB;
+        }
+
+        /* Vùng hiển thị xúc xắc */
+        .dice-area {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+        }
+
+        .dice {
+            width: 50px;
+            height: 50px;
+            background-color: #FF80AB;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Đặt cược */
+        .bet-status {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #bet-amount {
+            padding: 15px;
+            font-size: 16px;
+            width: 150px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            text-align: center;
+            background-color: #F50057;
+            color: white;
+        }
+
+        .game-status {
+            font-size: 20px;
+            color: #FF4081;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 15px;
+            background-color: #42A5F5;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            width: 150px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        button:hover {
+            background-color: #1E88E5;
+        }
+
+        /* Số dư */
+        .balance {
+            font-size: 20px;
+            margin-top: 20px;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Nút lịch sử */
+        .history-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #FF4081;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .history-btn:hover {
+            background-color: #F50057;
+        }
+
+        /* Lịch sử kết quả */
+        .history-container {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            width: 300px;
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .history-container h2 {
+            color: #FF4081;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .history-item {
+            color: white;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #555;
+            padding-bottom: 5px;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Màn hình đăng nhập -->
+    <div class="login-container" id="login-container">
+        <h1>Đăng Nhập</h1>
+        <input type="text" id="username" placeholder="Nhập tên người dùng" />
+        <button id="login-btn">Đăng Nhập</button>
+    </div>
+
+    <!-- Game -->
+    <div class="container" id="game-container">
+        <h1>Tài Xỉu Game</h1>
+
+        <div class="balance">
+            <p>Số dư: <span id="balance">1000</span> VND</p>
+        </div>
+
+        <!-- Chọn cược -->
+        <div class="bet-options">
+            <button class="bet-btn" id="bet-tai">Tài</button>
+            <button class="bet-btn" id="bet-xiu">Xỉu</button>
+        </div>
+
+        <!-- Hiển thị xúc xắc -->
+        <div class="dice-area">
+            <div class="dice" id="dice1"></div>
+            <div class="dice" id="dice2"></div>
+            <div class="dice" id="dice3"></div>
+        </div>
+
+        <!-- Đặt cược -->
+        <div class="bet-status">
+            <input type="number" id="bet-amount" placeholder="Số tiền cược" min="1">
+            <button id="place-bet">Đặt Cược</button>
+        </div>
+
+        <div class="game-status">
+            <p class="status" id="game-status"></p>
+            <p id="game-result"></p>
+        </div>
+
+        <!-- Nút lịch sử -->
+        <button class="history-btn" id="history-btn">Lịch Sử</button>
+
+        <!-- Lịch sử kết quả -->
+        <div class="history-container" id="history-container">
+            <h2>Lịch Sử</h2>
+            <div id="history-list"></div>
+        </div>
+    </div>
+
+    <script>
+        let balance = 1000;
+        let isRolling = false;
+        let history = []; // Lưu trữ lịch sử trận đấu
+
+        // Đăng nhập
+        document.getElementById('login-btn').addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            if (username.trim() === '') {
+                alert('Vui lòng nhập tên người dùng!');
+            } else {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('game-container').style.display = 'block';
+            }
+        });
+
+        // Khi người chơi nhấn "Đặt Cược"
+        document.getElementById('place-bet').addEventListener('click', function () {
+            const betAmount = parseInt(document.getElementById('bet-amount').value);
+            if (isNaN(betAmount) || betAmount <= 0 || betAmount > balance) {
+                alert('Vui lòng nhập số tiền cược hợp lệ và không vượt quá số dư!');
+                return;
+            }
+
+            const betChoice = getBetChoice();
+            if (!betChoice) {
+                alert('Vui lòng chọn Tài hoặc Xỉu!');
+                return;
+            }
+
+            if (isRolling) {
+                return;
+            }
+
+            playGame(betChoice, betAmount);
+        });
+
+        // Lấy lựa chọn cược của người chơi
+        function getBetChoice() {
+            if (document.getElementById('bet-tai').classList.contains('active')) {
+                return 'tai';
+            } else if (document.getElementById('bet-xiu').classList.contains('active')) {
+                return 'xiu';
+            }
+            return null;
+        }
+
+        // Kích hoạt lựa chọn cược
+        document.getElementById('bet-tai').addEventListener('click', function () {
+            activateBet('tai');
+        });
+        document.getElementById('bet-xiu').addEventListener('click', function () {
+            activateBet('xiu');
+        });
+
+        function activateBet(choice) {
+            document.querySelectorAll('.bet-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(`bet-${choice}`).classList.add('active');
+        }
+
+        // Chạy game khi người chơi đặt cược
+        function playGame(betChoice, betAmount) {
+            isRolling = true;
+
+            // Cập nhật số dư
+            balance -= betAmount;
+            document.getElementById('balance').textContent = balance;
+
+            const dice1 = getRandomDice();
+            const dice2 = getRandomDice();
+            const dice3 = getRandomDice();
+            const sum = dice1 + dice2 + dice3;
+
+            setDiceResult(dice1, dice2, dice3);
+
+            // Hiển thị dần kết quả
+            setTimeout(() => {
+                document.getElementById('dice1').textContent = dice1;
+            }, 500);
+            setTimeout(() => {
+                document.getElementById('dice2').textContent = dice2;
+            }, 1000);
+            setTimeout(() => {
+                document.getElementById('dice3').textContent = dice3;
+                const result = (sum > 10 && betChoice === 'tai') || (sum <= 10 && betChoice === 'xiu');
+                const resultText = result ? 'Bạn thắng!' : 'Bạn thua!';
+                document.getElementById('game-status').textContent = resultText;
+                document.getElementById('game-result').textContent = `Tổng số: ${sum}`;
+                
+                if (result) {
+                    balance += betAmount * 2;
+                    document.getElementById('balance').textContent = balance;
+                }
+
+                // Lưu kết quả vào lịch sử
+                history.push({ sum, betChoice, betAmount, resultText, dice1, dice2, dice3 });
+                updateHistory();
+
+                isRolling = false;
+            }, 1500);
+        }
+
+        // Hàm tạo số ngẫu nhiên cho xúc xắc
+        function getRandomDice() {
+            return Math.floor(Math.random() * 6) + 1;
+        }
+
+        // Hiển thị kết quả xúc xắc
+        function setDiceResult(dice1, dice2, dice3) {
+            document.getElementById('dice1').textContent = '?';
+            document.getElementById('dice2').textContent = '?';
+            document.getElementById('dice3').textContent = '?';
+        }
+
+        // Hiển thị lịch sử kết quả
+        document.getElementById('history-btn').addEventListener('click', function() {
+            const historyContainer = document.getElementById('history-container');
+            historyContainer.style.display = historyContainer.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Cập nhật lịch sử hiển thị
+        function updateHistory() {
+            const historyList = document.getElementById('history-list');
+            historyList.innerHTML = '';
+            history.forEach(item => {
+                const div = document.createElement('div');
+                div.classList.add('history-item');
+                div.innerHTML = `
+                    Cược: ${item.betChoice.toUpperCase()} - Kết quả: ${item.resultText} - Tiền cược: ${item.betAmount} VND
+                    <br> Xúc xắc: ${item.dice1}, ${item.dice2}, ${item.dice3}
+                `;
+                historyList.appendChild(div);
+            });
+        }
+    </script>
+</body>
+</html>
